@@ -90,7 +90,9 @@ for epoch in range(EPOCHS):
 # 📊 結果の実行とプロット
 # ==========================================
 # 学習後の結果を評価するため、滑らかな入力 x_test を作成
-x_test = torch.linspace(-5.0, 5.0, 100).view(-1, 1)
+#x_test = torch.linspace(-5.0, 5.0, 100).view(-1, 1)
+x_test = torch.zeros(100, INPUT_DIM)
+x_test[:, 0] = torch.linspace(-5.0, 5.0, 100)
 
 with torch.no_grad():
     model_X_prime.eval()
@@ -103,8 +105,8 @@ with torch.no_grad():
     torch.manual_seed(123) 
     Q_init = temp_model(x_test).numpy()
 
-x_test_np = x_test.numpy().flatten()
-
+#x_test_np = x_test.numpy().flatten()
+x_test_np = x_test[:, 0].numpy()
 # プロットの作成
 fig, axs = plt.subplots(1, 3, figsize=(18, 5))
 
