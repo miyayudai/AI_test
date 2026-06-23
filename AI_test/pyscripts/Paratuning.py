@@ -22,9 +22,9 @@ class Config:
     lora_dropout = 0.05 # 過学習を防ぐために一部のニューロンをランダムに無効化する割合
     
     # --- 学習のパラメータ ---
-    batch_size = 1      # 1回の計算で処理するデータ数(VRAMが少ない時は1)
-    max_steps = 30      # 理論確認のため、今回は30回の更新で終了させる(本格的な学習にはepochsを指定)
-    learning_rate = 2e-4
+    batch_size = 4      # 1回の計算で処理するデータ数(VRAMが少ない時は1)
+    max_steps = 500      # 理論確認のため、今回は30回の更新で終了させる(本格的な学習にはepochsを指定)
+    learning_rate = 1e-4
     max_length = 256 # 一度に読み込む最大文字数(トークン数)。VRAMに直結する
 
 # ==========================================
@@ -54,7 +54,7 @@ def load_quantized_model():
         load_in_4bit=True,
         bnb_4bit_use_double_quant=True,
         bnb_4bit_quant_type="nf4",
-        bnb_4bit_compute_dtype=torch.float16 # 計算自体はFP16に戻して精度を確保
+        bnb_4bit_compute_dtype=torch.bfloat16 # 計算自体はFP16に戻して精度を確保
     )
     
     # 巨大な元の重み行列 W を4bitでVRAM上にロードする
@@ -112,7 +112,10 @@ if __name__ == "__main__":
         max_steps=Config.max_steps,         # テストのため30ステップで終了
         logging_steps=1,                    # 毎ステップごとのLoss(誤差)を記録
         optim="paged_adamw_32bit",          # メモリ効率の良いオプティマイザ
-        fp16=True,                          # 高速化のための半精度計算
+        fp16=False,                          # 高速化のための半精度計算
+        bf16=True,
+        lr_scheduler_type="cosine", # ←★追加: 後半に学習率を下げて着地を綺麗にする
+        warmup_steps=50,
     )
     
     # Trainer(学習を実行するエンジン)の初期化

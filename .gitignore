@@ -6,3 +6,5 @@ AI_test/**
 !AI_test/Cscripts/**
 就活.yaml
 .vscode/**
+results/**
+!results/README.md
