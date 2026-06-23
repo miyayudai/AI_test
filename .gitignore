@@ -2,5 +2,7 @@
 AI_test/**
 !AI_test/pyscripts/
 !AI_test/pyscripts/**
+!AI_test/Cscripts/
+!AI_test/Cscripts/**
 就活.yaml
 .vscode/**
